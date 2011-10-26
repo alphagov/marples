@@ -25,6 +25,7 @@ module Marples
         logger.debug "Message body: #{message.body}"
         hash = Hash.from_xml message.body
         attributes = hash.values_at hash.keys.first
+        logger.debug "Yielding hash: #{hash.inspect}"
         yield attributes
         logger.debug "Finished processing message #{message.headers['message-id']}"
       end
