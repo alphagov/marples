@@ -15,10 +15,21 @@ Marples, this gem, removes any uncertainty about which destination our messages
 go to by enforcing a naming scheme.
 
 
-# Usage
+## Usage
+
+### Sending a message
 
   stomp_client = Stomp::Client.new ...
-  m = Marples::Client.new "publisher", stomp_client
+  m = Marples::Client.new stomp_client, "publisher"
   m.updated publication
-  # => /topic/publisher.updated
-      { 'publication' => { 'id' => 12345, 'title' => '...', ... }}
+  # => /topic/publisher.publications.updated
+      { 'guide' => { 'id' => 12345, 'title' => '...', ... }}
+
+### Listening for messages
+
+  stomp_client = Stomp::Client.new ...
+  m = Marples::Client.new stomp_client
+  m.when 'publisher', 'publication', 'updated' do |publication|
+    puts publication['slug']
+    # => "how-postcodes-work"
+  end
