@@ -3,21 +3,21 @@ module Marples
     include Pethau::InitializeWith
     include Pethau::DefaultValueOf
 
-    MESSAGES = [ :updated, :published ]
+    ACTIONS = [ :updated, :published ].freeze
 
     initialize_with :transport, :client_name, :logger
     default_value_of :client_name, File.basename($0)
     default_value_of :transport, Marples::NullTransport.instance
     default_value_of :logger, NullLogger.instance
 
-    def method_missing message, *args
-      return super unless MESSAGES.include? message
+    def method_missing action, *args
+      return super unless ACTIONS.include? action
       return super unless args.size == 1
-      publish message, args[0]
+      publish action, args[0]
     end
 
     def when application, object_type, action
-      destination = destination_for message, object_type
+      destination = destination_for application, object_type, action
       transport.subscribe destination do |message|
         logger.debug "Received message #{message.headers['message-id']} from #{destination}"
         logger.debug "Message body: #{message.body}"
@@ -28,9 +28,9 @@ module Marples
       end
     end
 
-    def publish message, object
+    def publish action, object
       object_type = object.class.name.tableize
-      destination = destination_for message, object_type
+      destination = destination_for object_type, action
       logger.debug "Sending XML to #{destination}"
       logger.debug "XML: #{object.to_xml}"
       transport.publish destination, object.to_xml
@@ -38,8 +38,8 @@ module Marples
     end
     private :publish
 
-    def destination_for message, object_type
-      "/topic/#{client_name}.#{object_type}.#{message}"
+    def destination_for application_name = client_name, object_type, action
+      "/topic/#{application_name}.#{object_type}.#{action}"
     end
     private :destination_for
   end
