@@ -17,7 +17,9 @@ module Marples
     end
 
     def when application, object_type, action
+      logger.debug "Listening for #{application} notifiying us of #{object_type} #{action}"
       destination = destination_for application, object_type, action
+      logger.debug "Underlying destination is #{destination}"
       transport.subscribe destination do |message|
         logger.debug "Received message #{message.headers['message-id']} from #{destination}"
         logger.debug "Message body: #{message.body}"
