@@ -17,6 +17,7 @@ module Marples
     end
 
     def when application, object_type, action
+      destination = destination_for message, object_type
       transport.subscribe destination do |message|
         logger.debug "Received message #{message.headers['message-id']} from #{destination}"
         logger.debug "Message body: #{message.body}"
