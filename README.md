@@ -33,6 +33,7 @@ go to by enforcing a naming scheme.
       puts publication['slug']
       # => "how-postcodes-work"
     end
+    m.join # Join the listening thread
 
 
 ## Logging

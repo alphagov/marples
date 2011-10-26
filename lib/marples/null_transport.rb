@@ -3,5 +3,6 @@ module Marples
     include Singleton
     def publish *args; end
     def subscribe *args; end
+    def join; end
   end
 end

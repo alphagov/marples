@@ -10,6 +10,10 @@ module Marples
     default_value_of :transport, Marples::NullTransport.instance
     default_value_of :logger, NullLogger.instance
 
+    def join
+      transport.join
+    end
+
     def method_missing action, *args
       return super unless ACTIONS.include? action
       return super unless args.size == 1
