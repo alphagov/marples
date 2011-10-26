@@ -18,4 +18,5 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency "pethau", ">= 0.0.2"
+  s.add_runtime_dependency "null_logger"
 end

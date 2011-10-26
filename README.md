@@ -33,3 +33,14 @@ go to by enforcing a naming scheme.
       puts publication['slug']
       # => "how-postcodes-work"
     end
+
+
+## Logging
+
+You can inject your logger into Marples to get some debugging information.
+
+    logger = Logger.new STDOUT
+    logger.level = Logger::DEBUG
+    producer = Marples::Client.new stomp_client, "publisher", logger
+    ...
+    consumer = Marples::Client.new stomp_client, 'consumer_name_here', logger
