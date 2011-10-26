@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "marples"
   s.version     = Marples::VERSION
   s.authors     = ["Craig R Webster", "Dafydd Vaughan"]
-  s.email       = ["craig@barkingiguana.com", "dai@daibach.co.uk"]]
+  s.email       = ["craig@barkingiguana.com", "dai@daibach.co.uk"]
   s.homepage    = ""
   s.summary     = %q{Message destination arbiter}
   s.description = %q{Message destination arbiter}
@@ -18,4 +18,5 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency "pethau", ">= 0.0.2"
+  s.add_runtime_dependency "nokogiri"
 end
