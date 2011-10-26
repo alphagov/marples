@@ -1,5 +1,8 @@
 module Marples
   class Client
+    include Pethau::InitializeWith
+    include Pethau::DefaultValueOf
+
     MESSAGES = [ :updated, :published ]
 
     initiaize_with :transport, :client_name
