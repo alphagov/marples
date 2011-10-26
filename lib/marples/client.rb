@@ -5,7 +5,7 @@ module Marples
 
     MESSAGES = [ :updated, :published ]
 
-    initiaize_with :transport, :client_name
+    initialize_with :transport, :client_name
     default_value_of :client_name, File.basename($0)
     default_value_of :transport, Marples::NullTransport.instance
 
