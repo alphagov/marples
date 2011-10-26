@@ -1,6 +1,7 @@
 module Marples
   class NullTransport
-    incluse Singleton
+    include Singleton
     def publish *args; end
+    def subscribe *args; end
   end
 end
