@@ -3,8 +3,6 @@ module Marples
     include Pethau::InitializeWith
     include Pethau::DefaultValueOf
 
-    ACTIONS = [ :updated, :published ].freeze
-
     initialize_with :transport, :client_name, :logger
     default_value_of :client_name, File.basename($0)
     default_value_of :transport, Marples::NullTransport.instance
@@ -15,7 +13,6 @@ module Marples
     end
 
     def method_missing action, *args
-      return super unless ACTIONS.include? action
       return super unless args.size == 1
       publish action, args[0]
     end
@@ -47,7 +44,7 @@ module Marples
     private :publish
 
     def destination_for application_name = client_name, object_type, action
-      "/topic/#{application_name}.#{object_type}.#{action}"
+      "/topic/marples.#{application_name}.#{object_type}.#{action}"
     end
     private :destination_for
   end
