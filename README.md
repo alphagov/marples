@@ -22,7 +22,7 @@ go to by enforcing a naming scheme.
     stomp_client = Stomp::Client.new ...
     m = Marples::Client.new stomp_client, "publisher"
     m.updated publication
-    # => /topic/publisher.publications.updated
+    # => /topic/marples.publisher.publications.updated
 	{ 'guide' => { 'id' => 12345, 'title' => '...', ... }}
 
 ### Listening for messages
@@ -45,3 +45,32 @@ You can inject your logger into Marples to get some debugging information.
     producer = Marples::Client.new stomp_client, "publisher", logger
     ...
     consumer = Marples::Client.new stomp_client, 'consumer_name_here', logger
+
+
+## ActiveModel(ish) integration
+
+If you'd like to get broadcasts of ActiveModel object (or objects whose
+classes behave a little like ActiveModel in terms of callbacks) you can
+include `Marples::ModelActionCallback` which will attempt to hook into
+`after_create`, `after_save`, `after_update`, `after_destroy` and
+`after_commit` to broadcast these actions. If your class doesn't have these
+methods available the action will be skipped with no error.
+
+Use it like this:
+
+    class Sandwich
+      include Marples::ModelActionCallback
+    end
+
+    Sandwich.marples_transport = Stomp::Client.new 'stomp://localhost:61613'
+    Sandwich.marples_client_name = 'menu'
+    Sandwich.marples_logger = Logger.new(STDOUT)
+
+The interesting things that happen to sandwiches will now be broadcast for
+other applications to pick up on as desired. No need to do anything special,
+just use the model like you normally would:
+
+    s = Sandwich.new
+    s.add_filling "cheese"
+    s.add_filling "ham"
+    s.save!
