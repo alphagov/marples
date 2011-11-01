@@ -58,6 +58,7 @@ methods available the action will be skipped with no error.
 
 Use it like this:
 
+    require 'marples/model_action_callback'
     class Sandwich
       include Marples::ModelActionCallback
     end
