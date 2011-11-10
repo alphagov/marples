@@ -36,6 +36,7 @@ module Marples
     def publish action, object
       object_type = object.class.name.tableize
       destination = destination_for object_type, action
+      logger.debug "Using transport #{transport}"
       logger.debug "Sending XML to #{destination}"
       logger.debug "XML: #{object.to_xml}"
       transport.publish destination, object.to_xml
