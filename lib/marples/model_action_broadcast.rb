@@ -9,7 +9,6 @@ module Marples
         class_attribute :marples_transport
         # You *will* need to set this yourself in each application.
         class_attribute :marples_client_name
-        self.marples_client_name = File.basename(Rails.root)
         # If you'd like the actions performed by Marples to be logged, set a
         # logger. By default this uses the NullLogger.
         class_attribute :marples_logger
