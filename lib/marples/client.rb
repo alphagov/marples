@@ -9,6 +9,7 @@ module Marples
     default_value_of :logger, NullLogger.instance
 
     def join
+      logger.debug "Listening on #{transport}"
       transport.join
     end
 
@@ -18,7 +19,7 @@ module Marples
     end
 
     def when application, object_type, action
-      logger.debug "Listening for #{application} notifiying us of #{object_type} #{action}"
+      logger.debug "Listening for #{application} notifiying us of #{action} #{object_type}"
       destination = destination_for application, object_type, action
       logger.debug "Underlying destination is #{destination}"
       transport.subscribe destination do |message|
