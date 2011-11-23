@@ -92,3 +92,10 @@ real transport when you don't care what happens to the messages:
 
 To give you confidence when deciding which version of Marples to depend on we
 will be using the Semantic Versioning scheme described at http://semver.org/.
+
+
+## Licencing information
+
+It's not adviseable to use code that's not had the terms of its licence made
+explicit. This project is released under the MIT licence, a copy of which
+should be distributed with this project in the LICENCE file.
