@@ -18,7 +18,6 @@ module Marples
          "deprecated and will be removed."
      end
      raise "You must provide a transport" if transport.nil?
-     self.client_name ||= File.basename($0)
      self.logger ||= NullLogger.instance
    end
 
@@ -50,7 +49,12 @@ module Marples
 
     def publish action, object
       object_type = object.class.name.tableize
-      destination = destination_for object_type, action
+      if client_name.nil?
+        logger.fatal "You must provide Marples::Client with a client_name" + \
+          " to publish actions"
+        raise "Provide Marples::Client with a client_name to publish messages"
+      end
+      destination = destination_for client_name, object_type, action
       logger.debug "Using transport #{transport}"
       logger.debug "Sending XML to #{destination}"
       logger.debug "XML: #{object.to_xml}"
@@ -59,7 +63,7 @@ module Marples
     end
     private :publish
 
-    def destination_for application_name = client_name, object_type, action
+    def destination_for application_name, object_type, action
       "/topic/marples.#{application_name}.#{object_type}.#{action}"
     end
     private :destination_for
