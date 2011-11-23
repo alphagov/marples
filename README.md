@@ -76,6 +76,7 @@ just use the model like you normally would:
     s.add_filling "ham"
     s.save!
 
+
 ## Testing
 
 You probably don't want to provide a broker to your test environment.
@@ -85,3 +86,9 @@ real transport when you don't care what happens to the messages:
 
   null_transport = Marples::NullTransport.instance
   Marples::Client.new transport: null_transport, client_name: 'whatever'
+
+
+## Semantic Versioning
+
+To give you confidence when deciding which version of Marples to depend on we
+will be using the Semantic Versioning scheme described at http://semver.org/.
