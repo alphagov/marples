@@ -14,6 +14,8 @@ module Marples
        self.transport = args.shift
        self.client_name = args.shift
        self.logger = args.shift
+       logger.warn "Positional arguments to Marples::Client#new are " + \
+         "deprecated and will be removed."
      end
      raise "You must provide a transport" if transport.nil?
      self.client_name ||= File.basename($0)
