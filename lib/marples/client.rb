@@ -1,11 +1,16 @@
 module Marples
   class Client
     include Pethau::InitializeWith
-    include Pethau::DefaultValueOf
+    [ :transport, :client_name, :logger ].each do |attribute|
+      attr_accessor attribute
+      private "#{attribute}=", attribute
+    end
 
-    initialize_with :transport, :client_name, :logger
-    default_value_of :client_name, File.basename($0)
-    default_value_of :logger, NullLogger.instance
+   def initialize transport, client_name = nil, logger = nil
+     self.transport = transport
+     self.client_name = client_name || File.basename($0)
+     self.logger = logger || NullLogger.instance
+   end
 
     def join
       logger.debug "Listening on #{transport}"
