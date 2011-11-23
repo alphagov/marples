@@ -5,7 +5,6 @@ module Marples
 
     initialize_with :transport, :client_name, :logger
     default_value_of :client_name, File.basename($0)
-    default_value_of :transport, Marples::NullTransport.instance
     default_value_of :logger, NullLogger.instance
 
     def join
