@@ -1,15 +1,23 @@
 module Marples
   class Client
-    include Pethau::InitializeWith
     [ :transport, :client_name, :logger ].each do |attribute|
       attr_accessor attribute
       private "#{attribute}=", attribute
     end
 
-   def initialize transport, client_name = nil, logger = nil
-     self.transport = transport
-     self.client_name = client_name || File.basename($0)
-     self.logger = logger || NullLogger.instance
+   def initialize *args
+     if args[0].kind_of? Hash
+       self.transport = options[:transport]
+       self.client_name = options[:client_name]
+       self.logger = options[:logger]
+     else
+       self.transport = args.shift
+       self.client_name = args.shift
+       self.logger = args.shift
+     end
+     raise "You must provide a transport" if transport.nil?
+     self.client_name ||= File.basename($0)
+     self.logger ||= NullLogger.instance
    end
 
     def join
