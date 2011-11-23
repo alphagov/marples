@@ -19,16 +19,15 @@ go to by enforcing a naming scheme.
 
 ### Sending a message
 
-    stomp_client = Stomp::Client.new ...
-    m = Marples::Client.new stomp_client, "publisher"
+    stomp = Stomp::Client.new ...
+    m = Marples::Client.new transport: stomp, client_name: "publisher"
     m.updated publication
     # => /topic/marples.publisher.publications.updated
-	{ 'guide' => { 'id' => 12345, 'title' => '...', ... }}
 
 ### Listening for messages
 
-    stomp_client = Stomp::Client.new ...
-    m = Marples::Client.new stomp_client
+    stomp = Stomp::Client.new ...
+    m = Marples::Client.new stomp
     m.when 'publisher', 'publication', 'updated' do |publication|
       puts publication['slug']
       # => "how-postcodes-work"
@@ -42,9 +41,10 @@ You can inject your logger into Marples to get some debugging information.
 
     logger = Logger.new STDOUT
     logger.level = Logger::DEBUG
-    producer = Marples::Client.new stomp_client, "publisher", logger
+    producer = Marples::Client.new transport: stomp, client_name: "publisher",
+      logger: logger
     ...
-    consumer = Marples::Client.new stomp_client, 'consumer_name_here', logger
+    consumer = Marples::Client.new transport: stomp, logger: logger
 
 
 ## ActiveModel(ish) integration
