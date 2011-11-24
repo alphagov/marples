@@ -19,7 +19,7 @@ module Marples
          "deprecated and will be removed."
      end
      raise "You must provide a transport" if transport.nil?
-     self.logger ||= NullLogger.instance
+     self.logger = NullLogger.instance if logger.nil?
    end
 
     def join
