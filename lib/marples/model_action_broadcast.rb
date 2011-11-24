@@ -1,6 +1,7 @@
 module Marples
   module ModelActionBroadcast
-    CALLBACKS = [ :save, :create, :update, :destroy, :commit ]
+    TRANSACTION_ACTIONS = :create, :update, :destroy
+    CALLBACKS = TRANSACTION_ACTIONS + [:save, :commit]
 
     def self.included base
       base.class_eval do
@@ -18,8 +19,12 @@ module Marples
           callback_action = callback.to_s =~ /e$/ ? "#{callback}d" : "#{callback}ed"
           after_callback = "after_#{callback}"
           next unless respond_to? after_callback
-          send after_callback do |record|
-            record.class.marples_client.send callback_action, record
+
+          notify = lambda { |record| record.class.marples_client.send callback_action, record }
+          if TRANSACTION_ACTIONS.include?(callback) && respond_to?(:after_commit)
+            after_commit :on => callback, &notify
+          else
+            send after_callback, &notify
           end
         end
 

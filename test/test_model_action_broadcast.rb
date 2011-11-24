@@ -41,4 +41,38 @@ class TestModelActionBroadcast < Test::Unit::TestCase
     widget.destroy
     assert_not_nil latest_notification_with_destination '/topic/marples.widgetotron.widgets.destroyed'
   end
+
+  def test_created_notification_is_sent_after_commit
+    Widget.transaction do
+      assert_nil latest_notification_with_destination '/topic/marples.widgetotron.widgets.created'
+      Widget.create!
+      assert_nil latest_notification_with_destination '/topic/marples.widgetotron.widgets.created'
+    end
+
+    assert_not_nil latest_notification_with_destination '/topic/marples.widgetotron.widgets.created'
+  end
+
+  def test_updated_notification_is_sent_after_commit
+    widget = Widget.create!
+
+    Widget.transaction do
+      assert_nil latest_notification_with_destination '/topic/marples.widgetotron.widgets.updated'
+      widget.save!
+      assert_nil latest_notification_with_destination '/topic/marples.widgetotron.widgets.updated'
+    end
+
+    assert_not_nil latest_notification_with_destination '/topic/marples.widgetotron.widgets.updated'
+  end
+
+  def test_destroyed_notification_is_sent_after_commit
+    widget = Widget.create!
+
+    Widget.transaction do
+      assert_nil latest_notification_with_destination '/topic/marples.widgetotron.widgets.destroyed'
+      widget.destroy
+      assert_nil latest_notification_with_destination '/topic/marples.widgetotron.widgets.destroyed'
+    end
+
+    assert_not_nil latest_notification_with_destination '/topic/marples.widgetotron.widgets.destroyed'
+  end
 end
