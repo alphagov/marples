@@ -28,7 +28,7 @@ module Marples
         end
 
         def self.build_marples_client
-          Marples::Client.new :transport: marples_transport,
+          Marples::Client.new transport: marples_transport,
             client_name: marples_client_name, logger: marples_logger
         end
       end
