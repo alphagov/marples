@@ -7,6 +7,7 @@ module Marples
 
    def initialize *args
      if args[0].kind_of? Hash
+       options = args.shift
        self.transport = options[:transport]
        self.client_name = options[:client_name]
        self.logger = options[:logger]
