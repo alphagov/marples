@@ -58,8 +58,8 @@ module Marples
       destination = destination_for client_name, object_type, action
       logger.debug "Using transport #{transport}"
       logger.debug "Sending XML to #{destination}"
-      logger.debug "XML: #{object.to_xml}"
       payload = generate_payload_for object
+      logger.debug "XML: #{payload}"
       transport.publish destination, payload
       logger.debug "Message sent"
     end
