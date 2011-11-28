@@ -72,7 +72,7 @@ module Marples
     def generate_payload_for object
       payload_generator[object.class].call object
     end
-    private :payload_for
+    private :generate_payload_for
 
     def payload_generator
       @payload_generator ||= Hash.new(lambda { |o| o.to_xml })
