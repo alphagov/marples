@@ -75,7 +75,7 @@ module Marples
     private :payload_for
 
     def payload_generator
-      @payload_generator ||= Hash.new { |o| o.to_xml }
+      @payload_generator ||= Hash.new(lambda { |o| o.to_xml })
     end
     private :payload_generator
 
