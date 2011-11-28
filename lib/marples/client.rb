@@ -59,10 +59,25 @@ module Marples
       logger.debug "Using transport #{transport}"
       logger.debug "Sending XML to #{destination}"
       logger.debug "XML: #{object.to_xml}"
-      transport.publish destination, object.to_xml
+      payload = generate_payload_for object
+      transport.publish destination, payload
       logger.debug "Message sent"
     end
     private :publish
+
+    def payload_for klass, &block
+      payload_generator[klass] = block
+    end
+
+    def generate_payload_for object
+      payload_generator[object.class].call object
+    end
+    private :payload_for
+
+    def payload_generator
+      @payload_generator ||= Hash.new { |o| o.to_xml }
+    end
+    private :payload_generator
 
     def destination_for application_name, object_type, action
       "/topic/marples.#{application_name}.#{object_type}.#{action}"

@@ -12,7 +12,8 @@ As Postmaster, Ernest Marples introduced postcodes to the UK, making message
 routing easier.
 
 Marples, this gem, removes any uncertainty about which destination our messages
-go to by enforcing a naming scheme.
+go to by enforcing a naming scheme, and means we don't care about which
+transport representation is used, because these details are hidden from us.
 
 
 ## Usage
@@ -27,12 +28,37 @@ go to by enforcing a naming scheme.
 ### Listening for messages
 
     stomp = Stomp::Client.new ...
-    m = Marples::Client.new stomp
+    m = Marples::Client.new transport: stomp
     m.when 'publisher', 'publication', 'updated' do |publication|
       puts publication['slug']
       # => "how-postcodes-work"
     end
     m.join # Join the listening thread
+
+### Adding more content to a message
+
+Some objects are only useful with more information eg an Account object is maybe
+only useful when it has a list of all customers as well.
+
+It's possible that you could override `#to_xml` for each object, but that feels
+a little messy.
+
+Normally of course you'd use an implementation of
+[Data Enricher](http://eaipatterns.com/DataEnricher.html) but if, for some
+reason, you don't have anywhere to implement these integration patterns, you can
+choose to implement your own message payload generator:
+
+    stomp = Stomp::Client.new ...
+    m = Marples::Client.new transport: stomp, client_name: "publisher"
+    m.payload_for Account do |account|
+      account.to_xml :include => :customers
+    end
+
+    account = Account.find ...
+    m.updated account
+
+Marples expects XML data to be put on the bus, if you choose to return something
+that's not XML then you're on your own.
 
 
 ## Logging
