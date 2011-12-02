@@ -13,7 +13,7 @@ module Marples
         # If you'd like the actions performed by Marples to be logged, set a
         # logger. By default this uses the NullLogger.
         class_attribute :marples_logger
-        self.marples_logger = Rails.logger
+        self.marples_logger = NullLogger.instance
 
         CALLBACKS.each do |callback|
           callback_action = callback.to_s =~ /e$/ ? "#{callback}d" : "#{callback}ed"
