@@ -33,18 +33,20 @@ module Marples
     end
 
     def when application, object_type, action
-      logger.debug "Listening for #{application} notifiying us of #{action} #{object_type}"
+      logger.info "Listening for #{application} notifiying us of #{action} #{object_type}"
       destination = destination_for application, object_type, action
       logger.debug "Underlying destination is #{destination}"
       transport.subscribe destination do |message|
-        logger.debug "Received message #{message.headers['message-id']} from #{destination}"
-        logger.debug "Message body: #{message.body}"
+        logger.info "Received message #{message.headers['message-id']} from #{destination}"
+        #logger.debug "Message body: #{message.body}"
         hash = Hash.from_xml message.body
-        logger.debug "Constructed hash: #{hash.inspect}"
+        #logger.debug "Constructed hash: #{hash.inspect}"
         attributes = hash.values[0]
-        logger.debug "Yielding hash: #{attributes.inspect}"
+        #logger.debug "Yielding hash: #{attributes.inspect}"
+        logger.info("About to yield")
+
         yield attributes
-        logger.debug "Finished processing message #{message.headers['message-id']}"
+        logger.info "Finished processing message #{message.headers['message-id']}"
       end
     end
 
@@ -56,12 +58,11 @@ module Marples
         raise "Provide Marples::Client with a client_name to publish messages"
       end
       destination = destination_for client_name, object_type, action
-      logger.debug "Using transport #{transport}"
+      #logger.debug "Using transport #{transport}"
       logger.debug "Sending XML to #{destination}"
       payload = generate_payload_for object
-      logger.debug "XML: #{payload}"
+      #logger.debug "XML: #{payload}"
       transport.publish destination, payload
-      logger.debug "Message sent"
     end
     private :publish
 
