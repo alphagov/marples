@@ -3,6 +3,10 @@ module Marples
     TRANSACTION_ACTIONS = :create, :update, :destroy
     CALLBACKS = TRANSACTION_ACTIONS + [:save, :commit]
 
+    def broadcast_action(callback_action)
+      self.class.marples_client.send callback_action, self
+    end
+
     def self.included base
       base.class_eval do
         # Something that response to #subscribe and #publish - although we
@@ -20,7 +24,7 @@ module Marples
           after_callback = "after_#{callback}"
           next unless respond_to? after_callback
 
-          notify = lambda { |record| record.class.marples_client.send callback_action, record }
+          notify = lambda { |record| record.broadcast_action(callback_action) }
           if TRANSACTION_ACTIONS.include?(callback) && respond_to?(:after_commit)
             after_commit :on => callback, &notify
           else
